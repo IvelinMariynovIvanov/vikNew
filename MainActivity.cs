@@ -496,10 +496,11 @@ namespace ListViewTask
                      string url = "http://192.168.2.222/VIKWebApi/";
 
                     /// !!!!!!!!!!!!!!!!!!!!!!!!
-                  // string realUrl = ConnectToApi.urlAPI + "api/abonats/" + crypFinalPass + "/" + billNumber + "/" + egn;
+                   string realUrl = ConnectToApi.urlAPI + "api/abonats/" + crypFinalPass + "/" 
+                        + billNumber + "/" + egn + "/" + ConnectToApi.updateByButtonRefresh + "/"; ;
                      
-                    string realUrl = "http://192.168.2.222/VIKWebApi/" + "api/abonats/" 
-                        + crypFinalPass + "/" + billNumber + "/" + egn + "/" + ConnectToApi.updateByButtonRefresh + "/";
+                    //string realUrl = "http://192.168.2.222/VIKWebApi/" + "api/abonats/" 
+                    //    + crypFinalPass + "/" + billNumber + "/" + egn + "/" + ConnectToApi.updateByButtonRefresh + "/";
 
                     var jsonResponse = connectToApi.FetchApiDataAsync(realUrl);
 
@@ -522,42 +523,81 @@ namespace ListViewTask
                         // check is billNumber correct and get and save customer in phone
                         else if (jsonResponse != null)
                         {
-                           // var jsonArray = JArray.Parse(jsonResponse);
+                        // var jsonArray = JArray.Parse(jsonResponse);
 
-                            Customer newCustomer = connectToApi.GetCustomerFromApi(jsonResponse);
+                        // Customer newCustomer = connectToApi.GetCustomerFromApi(jsonResponse);
+                        Customer updateCutomerButNoNotify = connectToApi.GetCustomerFromApi(jsonResponse);
 
-                            if(newCustomer != null && newCustomer.IsExisting == true)
+                        if (updateCutomerButNoNotify != null && updateCutomerButNoNotify.IsExisting == true)
+                          //  (newCustomer != null && newCustomer.IsExisting == true)
                             {
-                                newCustomer.NotifyInvoiceOverdue = customer.NotifyInvoiceOverdue;
-                                newCustomer.NotifyNewInvoice = customer.NotifyNewInvoice;
-                                newCustomer.NotifyReading = customer.NotifyReading;
-
-
-                            /////////////// be6e customer.ReceiveNotifyInvoiceOverdueToday
-                            bool isAnyNotifycationCheck =
-                                     (newCustomer.ReceiveNotifyInvoiceOverdueToday == true ||
-                                     newCustomer.ReceiveNotifyNewInvoiceToday == true ||
-                                     newCustomer.ReciveNotifyReadingToday == true);
-
-
-                                if (isAnyNotifycationCheck == true)
-                                {
-                                    mCustomerFromApiToNotifyToday.Add(newCustomer);
-
-                                }
-
-                            Customer updateCutomerButNoNotify = connectToApi.GetCustomerFromApi(jsonResponse);
-
                             updateCutomerButNoNotify.NotifyInvoiceOverdue = customer.NotifyInvoiceOverdue;
                             updateCutomerButNoNotify.NotifyNewInvoice = customer.NotifyNewInvoice;
                             updateCutomerButNoNotify.NotifyReading = customer.NotifyReading;
 
+
+                            ///////////////// be6e customer.ReceiveNotifyInvoiceOverdueToday
+                            //bool isAnyNotifycationCheck =
+                            //         (newCustomer.ReceiveNotifyInvoiceOverdueToday == true ||
+                            //         newCustomer.ReceiveNotifyNewInvoiceToday == true ||
+                            //         newCustomer.ReciveNotifyReadingToday == true);
+
+
+                            //    if (isAnyNotifycationCheck == true)
+                            //    {
+                            //        mCustomerFromApiToNotifyToday.Add(newCustomer);
+
+                            //    }
+
+
+
+
+                          //  Customer updateCutomerButNoNotify = connectToApi.GetCustomerFromApi(jsonResponse);
+
+                            //updateCutomerButNoNotify.NotifyInvoiceOverdue = customer.NotifyInvoiceOverdue;
+                            //updateCutomerButNoNotify.NotifyNewInvoice = customer.NotifyNewInvoice;
+                            //updateCutomerButNoNotify.NotifyReading = customer.NotifyReading;
+
+                            if(updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday == true)
+                            {
+                                updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday = true;
+                            }
+                            else
+                            {
+                                updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday = customer.ReceiveNotifyInvoiceOverdueToday;
+                            }
+
+                            if (updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday == true)
+                            {
+                                updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday = true;
+                            }
+                            else
+                            {
+                                updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday = customer.ReceiveNotifyNewInvoiceToday;
+                            }
+
+                            if (updateCutomerButNoNotify.ReciveNotifyReadingToday == true)
+                            {
+                                updateCutomerButNoNotify.ReciveNotifyReadingToday = true;
+                            }
+                            else
+                            {
+                                updateCutomerButNoNotify.ReciveNotifyReadingToday = customer.ReciveNotifyReadingToday;
+                            }
+
+
+
+                            //updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday = customer.ReceiveNotifyInvoiceOverdueToday;
+                            //updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday = customer.ReceiveNotifyNewInvoiceToday;
+                            //updateCutomerButNoNotify.ReciveNotifyReadingToday = customer.ReciveNotifyReadingToday;
+
+
                             //Customer updateCutomerButNoNotify = new Customer();
                             //updateCutomerButNoNotify = newCustomer;
 
-                            updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday = false;
-                            updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday = false;
-                            updateCutomerButNoNotify.ReciveNotifyReadingToday = false;
+                            //updateCutomerButNoNotify.ReceiveNotifyInvoiceOverdueToday = false;
+                            //updateCutomerButNoNotify.ReceiveNotifyNewInvoiceToday = false;
+                            //updateCutomerButNoNotify.ReciveNotifyReadingToday = false;
 
                             mAllUpdateCustomerFromApi.Add(updateCutomerButNoNotify);     ////////////updateCutomerButNoNotify
 
@@ -590,7 +630,7 @@ namespace ListViewTask
 
                     });
 
-                    SelectWhichCustomersTobeNotified(countНotifyReadingustomers, countНotifyInvoiceOverdueCustomers, countNewНotifyNewInvoiceCustomers, mCustomerFromApiToNotifyToday);
+                    SelectWhichCustomersTobeNotified(countНotifyReadingustomers, countНotifyInvoiceOverdueCustomers, countNewНotifyNewInvoiceCustomers, mAllUpdateCustomerFromApi); //mCustomerFromApiToNotifyToday
 
                     SaveUpdatesInPhone(pref, mDate.Text.ToString(), mHour.Text.ToString());
 
@@ -796,29 +836,39 @@ namespace ListViewTask
         }
 
 
-        private static void SelectWhichCustomersTobeNotified(List<Customer> countНotifyReadingustomers, List<Customer> countНotifyInvoiceOverdueCustomers, List<Customer> countNewНotifyNewInvoiceCustomers, List<Customer> mCustomerFromApiNoNotifyToday) 
+        private static void SelectWhichCustomersTobeNotified
+        (List<Customer> countНotifyReadingustomers, List<Customer> countНotifyInvoiceOverdueCustomers, List<Customer> countNewНotifyNewInvoiceCustomers, List<Customer> mAllUpdateCustomerFromApi) /////mCustomerFromApiNoNotifyToday
         {
-            foreach (var customer in mCustomerFromApiNoNotifyToday)  
+            foreach (var customer in mAllUpdateCustomerFromApi)   //// mCustomerFromApiToNotifyToday
             {
+                //customer.ReceiveNotifyInvoiceOverdueToday = true;
+                //customer.ReceiveNotifyNewInvoiceToday = true;
+                //customer.ReciveNotifyReadingToday = true;
 
-                bool isAnyNotifycationCheck =
+                //// isAnyNotifycationCheck
+                bool haveToRecieveNotificationToday =
                     (customer.ReceiveNotifyInvoiceOverdueToday == true ||
                     customer.ReceiveNotifyNewInvoiceToday == true ||
                     customer.ReciveNotifyReadingToday == true);
  
-                if (isAnyNotifycationCheck == true)
+                if (haveToRecieveNotificationToday == true)
                 {
     
                     if (customer.ReceiveNotifyNewInvoiceToday == true && customer.NotifyNewInvoice == true)
                     {
+                        customer.ReceiveNotifyNewInvoiceToday = false;
+
                         countNewНotifyNewInvoiceCustomers.Add(customer);
                     }
                     if (customer.ReceiveNotifyInvoiceOverdueToday == true && customer.NotifyInvoiceOverdue == true)
                     {
+                        customer.ReceiveNotifyInvoiceOverdueToday = false;
+
                         countНotifyInvoiceOverdueCustomers.Add(customer);
                     }
                     if (customer.ReciveNotifyReadingToday == true && customer.NotifyReading == true)
                     {
+                        customer.ReciveNotifyReadingToday = false;
 
                         countНotifyReadingustomers.Add(customer);
                     }
